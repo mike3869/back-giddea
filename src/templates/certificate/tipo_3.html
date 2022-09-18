@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Certificado o Constancia | GIDDEA 2022</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        outline: 0;
+        list-style: none;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-style: normal;
+      }
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      body {
+        font-family: "Helvetica";
+        font-style: normal !important;
+        height: 1120px;
+        width: 792px;
+      }
+      #pageHeader::before,
+      .pageHeader::before {
+        content: "";
+        display: block;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 1;
+        background-image: url({{BACKGROUND_CERTIFICATE}});
+        background-repeat: no-repeat;
+        background-position: right top;
+        background-size: contain;
+      }
+      .awarded-to {
+        position: absolute;
+        top: 149px;
+        left: 201px;
+        font-size: 18px;
+        font-weight: 300;
+        font-style: normal;
+      }
+      .student-name {
+        position: absolute;
+        text-transform: uppercase;
+        top: 167px;
+        left: 201px;
+        font-size: 26px;
+        font-weight: bold;
+        font-style: normal;
+        width: 500px;
+      }
+      .pre-course {
+        position: absolute;
+        top: 233px;
+        left: 201px;
+        font-size: 18px;
+        font-weight: 300;
+        font-style: normal;
+      }
+      .text-course {
+        position: absolute;
+        top: 255px;
+        left: 201px;
+        width: 500px;
+        font-size: 18px;
+        font-weight: 300;
+        font-style: normal;
+        
+      }
+      .text-course p.course-name {
+        color: #214cd8;
+        text-transform: uppercase;
+        padding-bottom: 25px;
+        font-size: 26px;
+        font-weight: bold;
+        font-style: normal;
+      }
+      .text-course ul {
+        padding-bottom: 15px;
+        padding-left: 30px;
+        font-size: 18px;
+        font-style: normal;
+      }
+      .text-course li {
+        list-style: disc;
+      }
+      .description-one {
+        position: absolute;
+        top: 355px;
+        left: 201px;
+        font-size: 18px;
+        font-weight: 300;
+        font-style: normal;
+      }
+      .description-two {
+        position: absolute;
+        top: 376px;
+        left: 201px;
+        font-size: 18px;
+        font-weight: 300;
+        font-style: normal;
+      }
+      .date-print {
+        position: absolute;
+        text-transform: capitalize;
+        color: #c4c4c4;
+        top: 1040px;
+        left: 201px;
+        font-size: 18px;
+        font-weight: 300;
+        font-style: normal;
+      }
+      .qr-image {
+        position: absolute;
+        top: 875px;
+        left: 591px;
+      }
+      .certificate-code {
+        position: absolute;
+        top: 1040px;
+        left: 490px;
+        font-size: 11px;
+        font-weight: 300;
+        font-style: normal;
+        text-align: right;
+        width: 265px;
+        /* border: 1px solid #214cd8; */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pageHeader"></div>
+    <div class="awarded-to">Otorgado a:</div>
+    <div class="student-name">{{STUDENT-NAME}}</div>
+    <div class="pre-course">
+      Por haber completado las {{COURSE-HOURS}} horas del 
+    </div>
+    <div class="text-course">
+      <p class="course-name">{{COURSE-NAME}}</p>
+      <p class="description">
+        con los cursos: <br />
+        {{COURSE-LIST}}
+        {{START-DATE}}{{END-DATE}}
+      </p>
+    </div>
+    <div class="date-print">{{PRINT-DATE}}</div>
+    <img class="qr-image" src="{{QR_IMAGE}}" />
+    <div class="certificate-code">{{DOCUMENT-UUID}}</div>
+  </body>
+</html>

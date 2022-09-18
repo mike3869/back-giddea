@@ -1,0 +1,7 @@
+node_modules/
+dist/
+http/
+test/
+docker/
+src/configs/*.env
+src/configs/config.json
