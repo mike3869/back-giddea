@@ -4,7 +4,11 @@ import path from "path";
 import qrcode from "qrcode";
 import moment from "moment";
 
-import { getByUuid } from "../../database/certificate";
+import {
+  getByUuid,
+  getCertificateListPagination,
+  getCertificateListByFilters,
+} from "../../database/certificate";
 import { PATH_SLUG } from "../../configs/const/constants";
 
 const OPTIONS_TYPE: any = {
@@ -137,7 +141,7 @@ class Certificate {
     temp = temp.replace("{{PRINT-DATE}}", `${pd_month} ${pd_year}`);
     return temp;
   }
-  async searchById() {
+  async getById() {
     try {
       const uuid = this._uuid;
       if (uuid) {
@@ -146,6 +150,30 @@ class Certificate {
       } else {
         throw new Error("The id is not recognized");
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getListByQuery(
+    _page: number = 1,
+    _size: number = 25,
+    _filters: string = ""
+  ) {
+    try {
+      const page = _page < 0 ? 0 : _page;
+      const size = _size < 0 ? 0 : _size;
+      const init = (page - 1) * _size;
+      const list = await getCertificateListByFilters(init, size, _filters);
+      const pages = await getCertificateListPagination(_filters);
+      return {
+        list: list,
+        pagination: {
+          ...pages[0],
+          limit: size,
+          page: page,
+          total_page: Math.ceil(pages[0].total / size),
+        },
+      };
     } catch (error) {
       throw error;
     }

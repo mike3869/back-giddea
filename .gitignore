@@ -5,3 +5,4 @@ test/
 docker/
 src/configs/*.env
 src/configs/config.json
+output.json

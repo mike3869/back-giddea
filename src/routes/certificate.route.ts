@@ -4,10 +4,14 @@ import fileUpload from "express-fileupload";
 import reader from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 
+import cors from "../configs/origin";
 import * as certificateController from "../controllers/certificate.controller";
+
 const router: Router = Router();
 
-router.get("/:uuid", certificateController.getByUuid);
+router.use(cors);
+router.get("/pdf/:uuid", certificateController.getPdfByUuid);
+router.get('/list',certificateController.getListByQuery);
 
 router.post(
   "/",

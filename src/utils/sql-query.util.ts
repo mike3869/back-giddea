@@ -1,6 +1,6 @@
 import pool from "../configs/database/database";
 
-export const querySelect = async (query: string, values: string[]) => {
+export const querySelect = async (query: string, values: any[]) => {
     try {
         const response = await pool.query(query, values);
         const result = JSON.parse(JSON.stringify(response));
