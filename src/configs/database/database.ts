@@ -18,27 +18,29 @@ const config = {
   database: DATABASE,
 };
 
-const pool: any = mysql.createPool(config);
+const pool: mysql.Pool = mysql.createPool(config);
 
-pool.getConnection((err: any, connection: any) => {
-  if (err) {
-    if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      console.error("Database connection was closed.");
+pool.getConnection(
+  (err: mysql.MysqlError, connection: mysql.PoolConnection) => {
+    if (err) {
+      if (err.code === "PROTOCOL_CONNECTION_LOST") {
+        console.error("Database connection was closed.");
+      }
+      if (err.code === "ER_CON_COUNT_ERROR") {
+        console.error("Database has to many connections");
+      }
+      if (err.code === "ECONNREFUSED") {
+        console.error("Database connection was refused");
+      }
     }
-    if (err.code === "ER_CON_COUNT_ERROR") {
-      console.error("Database has to many connections");
-    }
-    if (err.code === "ECONNREFUSED") {
-      console.error("Database connection was refused");
-    }
+
+    if (connection) connection.release();
+    console.log("DB is Connected");
+
+    return;
   }
+);
 
-  if (connection) connection.release();
-  console.log("DB is Connected");
-
-  return;
-});
-
-pool.query = promisify(pool.query);
+// pool.query = promisify(pool.query);
 
 export default pool;

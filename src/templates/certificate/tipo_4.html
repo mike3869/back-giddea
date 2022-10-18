@@ -4,10 +4,26 @@
     <meta charset="UTF-8" />
     <title>Certificado o Constancia | GIDDEA 2022</title>
     <style>
-      html,
+      * {
+        margin: 0;
+        padding: 0;
+        outline: 0;
+        list-style: none;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-style: normal;
+      }
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
       body {
         font-family: "Helvetica";
         font-style: normal !important;
+        height: 594px;
+        width: 841px;
+        /*border: 1px solid #214cd8;*/
       }
       #pageHeader::before,
       .pageHeader::before {
@@ -18,7 +34,7 @@
         right: 0;
         top: 0;
         left: 0;
-        height: 1550px;
+        height: 100%;
         width: 100%;
         opacity: 1;
         background-image: url({{BACKGROUND_CERTIFICATE}});
@@ -28,27 +44,27 @@
       }
       .awarded-to {
         position: absolute;
-        top: 149px;
-        left: 243px;
-        font-size: 18px;
+        top: 89px;
+        left: 145px;
+        font-size: 14px;
         font-weight: 300;
         font-style: normal;
       }
       .student-name {
         position: absolute;
         text-transform: uppercase;
-        top: 167px;
-        left: 243px;
-        font-size: 26px;
+        top: 107px;
+        left: 145px;
+        font-size: 22px;
         font-weight: bold;
         font-style: normal;
-        width: 800px;
+        width: 620px;
       }
       .pre-course {
         position: absolute;
-        top: 233px;
-        left: 243px;
-        font-size: 18px;
+        top: 158px;
+        left: 145px;
+        font-size: 14px;
         font-weight: 300;
         font-style: normal;
       }
@@ -56,26 +72,26 @@
         position: absolute;
         color: #214cd8;
         text-transform: uppercase;
-        top: 255px;
-        left: 243px;
-        font-size: 26px;
+        top: 180px;
+        left: 145px;
+        font-size: 22px;
         font-weight: bold;
         font-style: normal;
-        width: 800px;
+        width: 620px;
       }
       .description-one {
         position: absolute;
-        top: 355px;
-        left: 243px;
-        font-size: 18px;
+        top: 260px;
+        left: 145px;
+        font-size: 14px;
         font-weight: 300;
         font-style: normal;
       }
       .description-two {
         position: absolute;
-        top: 376px;
-        left: 243px;
-        font-size: 18px;
+        top: 280px;
+        left: 145px;
+        font-size: 14px;
         font-weight: 300;
         font-style: normal;
       }
@@ -83,26 +99,28 @@
         position: absolute;
         text-transform: capitalize;
         color: #c4c4c4;
-        top: 700px;
-        left: 243px;
-        font-size: 18px;
+        top: 520px;
+        left: 145px;
+        font-size: 14px;
         font-weight: 300;
         font-style: normal;
       }
       .qr-image {
         position: absolute;
-        top: 535px;
-        left: 880px;
+        top: 405px;
+        left: 650px;
+        width: 110px;
+        height: auto;
       }
       .certificate-code {
         position: absolute;
-        top: 712px;
-        left: 835px;
+        top: 520px;
+        left: 540px;
         font-size: 11px;
         font-weight: 300;
         font-style: normal;
         text-align: center;
-        width: 265px;
+        width: 280px;
       }
     </style>
   </head>

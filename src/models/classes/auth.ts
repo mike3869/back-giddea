@@ -31,7 +31,7 @@ class Auth {
       const password = this._password;
 
       const pass = await this.encryptPassword(password);
-      const user = await authLogin(username, pass);
+      const user: any = await authLogin(username, pass);
       if (user.length) {
         const payloadJwt = {
           user: {

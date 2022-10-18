@@ -1,4 +1,4 @@
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import HttpException from "../models/classes/httpException";
 
 const whitelist: Array<string | undefined> = [
@@ -10,8 +10,9 @@ const whitelist: Array<string | undefined> = [
   undefined,
 ];
 
-const options: cors.CorsOptions = {
+const options: CorsOptions = {
   origin: (origin, callback) => {
+    console.log("origin", origin);
     if (whitelist.includes(origin)) {
       callback(null, true);
     } else {
@@ -30,5 +31,4 @@ const options: cors.CorsOptions = {
   credentials: true,
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-
 export default cors(options);

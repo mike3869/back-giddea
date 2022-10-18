@@ -1,6 +1,11 @@
 import { escape } from "mysql";
+import reader from "xlsx";
+import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 import { SuccessMessage } from "../models/interfaces/message";
+import { ICertificate } from "../models/interfaces/certificate";
 import Certificate from "../models/classes/certificate";
+import { excelDateToJSDate } from "../utils/functions.util";
 
 export const getPdfDocumentByUuid = async (_uuid: string) => {
   try {
@@ -54,6 +59,66 @@ export const getListByQuery = async (_queryList: any) => {
       status: 200,
       msg: "Certificate List",
       data: list,
+    };
+    return rsp;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const saveTemplate = async (_template: any) => {
+  try {
+    const path: string = _template.tempFilePath;
+    const file: any = reader.readFile(path);
+    let data: any[] = [];
+    const sheet = file.Sheets["Certificates"];
+    const rows = reader.utils.sheet_to_json(sheet);
+    rows.forEach((item: any) => {
+      const row: ICertificate = {
+        uuid: item["CODIGO"] ? String(item["CODIGO"]).trim() : uuidv4(),
+        certificate_type_id: Number(
+          String(item["TIPO CERTIFICADO"].split("|")[1]).trim()
+        ).valueOf(),
+        certificate_template_id: Number(
+          String(item["PLANTILLA"].split("|")[1]).trim()
+        ).valueOf(),
+        student_name: String(item["ALUMNO"]).trim(),
+        course_name: String(item["CURSO"].split("|")[0]).trim(),
+        course_id: Number(String(item["CURSO"].split("|")[1]).trim()).valueOf(),
+        course_hours: item["HORAS CURSO"]
+          ? Number(item["HORAS CURSO"]).valueOf()
+          : null,
+        course_score: item["NOTA CURSO"]
+          ? Number(item["NOTA CURSO"]).valueOf()
+          : null,
+        start_date: moment(
+          excelDateToJSDate(Number(item["FECHA INICIO"]).valueOf())
+        ).format("YYYY-MM-DD"),
+        end_date: item["FECHA FIN"]
+          ? moment(
+              excelDateToJSDate(Number(item["FECHA FIN"]).valueOf())
+            ).format("YYYY-MM-DD")
+          : null,
+        person_identity_document_types_id: item["TIPO DOCUMENTO"]
+          ? Number(
+              String(item["TIPO DOCUMENTO"].split("|")[1]).trim()
+            ).valueOf()
+          : null,
+        person_document_code: item["NUMERO DOCUMENTO"]
+          ? String(item["NUMERO DOCUMENTO"]).trim()
+          : null,
+        course_list: item["LISTA CURSOS"]
+          ? String(item["LISTA CURSOS"]).trim()
+          : "",
+      };
+      data.push(row);
+    });
+    const cert = new Certificate();
+    const saveExcelFile = await cert.saveExcelFile(data);
+    let rsp: SuccessMessage = {
+      status: 200,
+      msg: "Certificate List",
+      data: saveExcelFile,
     };
     return rsp;
   } catch (error) {

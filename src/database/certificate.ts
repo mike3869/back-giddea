@@ -1,4 +1,5 @@
-import { querySelect } from "../utils/sql-query.util";
+import { querySelect, queryBulkInsert } from "../utils/sql-query.util";
+import { ICertificate } from "../models/interfaces/certificate";
 
 export const getByUuid = async (_uuid: string) => {
   try {
@@ -9,9 +10,7 @@ export const getByUuid = async (_uuid: string) => {
     throw error;
   }
 };
-export const getCertificateListPagination = async (
-  _filters: string
-) => {
+export const getCertificateListPagination = async (_filters: string) => {
   try {
     const query = `SELECT COUNT(*) as total FROM certificate AS c INNER JOIN certificate_type AS ct ON c.certificate_type_id = ct.id ${
       _filters != "" ? " WHERE " + _filters : ""
@@ -34,7 +33,33 @@ export const getCertificateListByFilters = async (
     const result = await querySelect(query, [_page, _size]);
     return result;
   } catch (error) {
-    console.log("error", error);
+    throw error;
+  }
+};
+export const bulkInsertCertificates = async (_array: ICertificate[]) => {
+  try {
+    var sql =
+      "INSERT INTO certificate (uuid, certificate_type_id, certificate_template_id, student_name, course_name, course_hours, course_score, start_date, end_date, course_list, person_identity_document_types_id, person_document_code, course_id ) VALUES ?";
+    var values = [
+      _array.map((row) => [
+        row.uuid,
+        row.certificate_type_id,
+        row.certificate_template_id,
+        row.student_name,
+        row.course_name,
+        row.course_hours,
+        row.course_score,
+        row.start_date,
+        row.end_date,
+        row.course_list,
+        row.person_identity_document_types_id,
+        row.person_document_code,
+        row.course_id,
+      ]),
+    ];
+    const result = await queryBulkInsert(sql, values);
+    return result;
+  } catch (error) {
     throw error;
   }
 };

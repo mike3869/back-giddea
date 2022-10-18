@@ -8,8 +8,10 @@ import {
   getByUuid,
   getCertificateListPagination,
   getCertificateListByFilters,
+  bulkInsertCertificates,
 } from "../../database/certificate";
 import { PATH_SLUG } from "../../configs/const/constants";
+import { ICertificate } from "../../models/interfaces/certificate";
 
 const OPTIONS_TYPE: any = {
   portrait: {
@@ -145,7 +147,7 @@ class Certificate {
     try {
       const uuid = this._uuid;
       if (uuid) {
-        const document = await getByUuid(uuid);
+        const document: any = await getByUuid(uuid);
         return document[0];
       } else {
         throw new Error("The id is not recognized");
@@ -164,7 +166,7 @@ class Certificate {
       const size = _size < 0 ? 0 : _size;
       const init = (page - 1) * _size;
       const list = await getCertificateListByFilters(init, size, _filters);
-      const pages = await getCertificateListPagination(_filters);
+      const pages: any = await getCertificateListPagination(_filters);
       return {
         list: list,
         pagination: {
@@ -178,13 +180,12 @@ class Certificate {
       throw error;
     }
   }
-  async getDocumentById() {
+  getDocumentById() {
     const promise = new Promise(async (resolve, reject) => {
       try {
         const uuid = this._uuid;
         if (uuid) {
-          const document = await getByUuid(uuid);
-          console.log("document", document);
+          const document: any = await getByUuid(uuid);
           const type = document[0].template.toLowerCase().replace(" ", "_");
           const pathFile = path.resolve(
             __dirname,
@@ -327,6 +328,37 @@ class Certificate {
       }
     });
     return promise;
+  }
+  saveExcelFile(_rows: ICertificate[]) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const numRows = 1000;
+        let errors = [];
+        let successes = [];
+        for (let i = 0; i < _rows.length; i += numRows) {
+          let errorsTemp: any[] = [];
+          try {
+            const temp: ICertificate[] = _rows.slice(i, i + numRows);
+            errorsTemp = temp;
+            await bulkInsertCertificates(temp);
+            successes.push({ message: "created", data: errorsTemp });
+            errorsTemp = [];
+          } catch (err) {
+            errors.push({ message: String(err), data: errorsTemp });
+            errorsTemp = [];
+          }
+        }
+        if (errors.length > 0) {
+          reject({
+            code: 449,
+            msg: JSON.stringify([...successes, ...errors]),
+          });
+        }
+        resolve(successes);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 }
 

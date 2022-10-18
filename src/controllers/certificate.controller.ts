@@ -45,3 +45,24 @@ export const getListByQuery = async (
     }
   }
 };
+
+export const saveTemplate= async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const file: any = req.files;
+    const template = file["file"];
+    const result: SuccessMessage = await certificateService.saveTemplate(
+      template
+    );
+    res.status(result.status).json(result);
+  } catch (error: any) {
+    if (error instanceof Error) {
+      next(new HttpException(500, error.message));
+    } else {
+      next(new HttpException(error.code, error.msg));
+    }
+  }
+};

@@ -9,12 +9,12 @@ export const logErrors = (
   next: NextFunction
 ) => {
   const today: number = new Date().valueOf();
-  console.error("/******************INICIO***********************/")
+  console.error("/******************INICIO***********************/");
   console.error(`LOG ERROR NAME (${today}) => `, err.name);
   console.error(`LOG ERROR MESSAGE (${today}) => `, err._message);
   console.error(`LOG ERROR STATUS (${today}) => `, err._status);
   console.error(`LOG ERROR STACK (${today}) => `, err.stack);
-  console.error("/*******************FIN************************/")
+  console.error("/*******************FIN************************/");
   next(err);
 };
 
@@ -31,7 +31,3 @@ export const errorHandler = (
     error: response,
   });
 };
-
-
-
-
