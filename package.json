@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "tsc && node dist/index.js",
-    "start": "SET NODE_ENV=PRODUCTION && node dist/index.js",
+    "start": "set NODE_ENV=PRODUCTION && node dist/index.js",
     "build:clean": "rimraf dist/",
     "build:copy-files": "copyfiles -u 1 src/**/*.html src/**/*.png dist/",
     "build": "npm run build:clean && tsc && npm run build:copy-files"
