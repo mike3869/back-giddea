@@ -2,10 +2,11 @@ import cors, { CorsOptions } from "cors";
 import HttpException from "../models/classes/httpException";
 
 const whitelist: Array<string | undefined> = [
-  "http://localhost:4000",
+  "http://localhost:5000",
   "http://localhost:8080",
   "http://localhost:8081",
   "https://grupoiddea.com",
+  "https://sig.giddea.com",
   "undefined",
   undefined,
 ];
