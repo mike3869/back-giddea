@@ -46,7 +46,7 @@ export const getListByQuery = async (
   }
 };
 
-export const saveTemplate= async (
+export const saveTemplate = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -54,10 +54,13 @@ export const saveTemplate= async (
   try {
     const file: any = req.files;
     const template = file["file"];
-    const result: SuccessMessage = await certificateService.saveTemplate(
-      template
-    );
-    res.status(result.status).json(result);
+    const result = await certificateService.saveTemplate(template);
+    if (result) {
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      result.pipe(res);
+    } else {
+      throw new Error("Document 'stream' was not returned");
+    }
   } catch (error: any) {
     if (error instanceof Error) {
       next(new HttpException(500, error.message));

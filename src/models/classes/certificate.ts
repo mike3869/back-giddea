@@ -333,18 +333,24 @@ class Certificate {
     return new Promise(async (resolve, reject) => {
       try {
         const numRows = 1000;
-        let errors = [];
-        let successes = [];
+        let errors: any[] = [];
+        let successes: any[] = [];
         for (let i = 0; i < _rows.length; i += numRows) {
           let errorsTemp: any[] = [];
           try {
             const temp: ICertificate[] = _rows.slice(i, i + numRows);
             errorsTemp = temp;
             await bulkInsertCertificates(temp);
-            successes.push({ message: "created", data: errorsTemp });
+            const newData = errorsTemp.map((obj) => {
+              return { ...obj, message: "created" };
+            });
+            successes.push(...newData);
             errorsTemp = [];
           } catch (err) {
-            errors.push({ message: String(err), data: errorsTemp });
+            const newData = errorsTemp.map((obj) => {
+              return { ...obj, message: String(err) };
+            });
+            successes.push(...newData);
             errorsTemp = [];
           }
         }

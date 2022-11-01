@@ -1,11 +1,11 @@
 import { escape } from "mysql";
-import reader from "xlsx";
+import XLSX, { WritingOptions } from "xlsx";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import { SuccessMessage } from "../models/interfaces/message";
 import { ICertificate } from "../models/interfaces/certificate";
 import Certificate from "../models/classes/certificate";
-import { excelDateToJSDate } from "../utils/functions.util";
+import { excelDateToJSDate, bufferToStream } from "../utils/functions.util";
 
 export const getPdfDocumentByUuid = async (_uuid: string) => {
   try {
@@ -69,10 +69,10 @@ export const getListByQuery = async (_queryList: any) => {
 export const saveTemplate = async (_template: any) => {
   try {
     const path: string = _template.tempFilePath;
-    const file: any = reader.readFile(path);
+    const file: any = XLSX.readFile(path);
     let data: any[] = [];
     const sheet = file.Sheets["Certificates"];
-    const rows = reader.utils.sheet_to_json(sheet);
+    const rows = XLSX.utils.sheet_to_json(sheet);
     rows.forEach((item: any) => {
       const row: ICertificate = {
         uuid: item["CODIGO"] ? String(item["CODIGO"]).trim() : uuidv4(),
@@ -114,13 +114,14 @@ export const saveTemplate = async (_template: any) => {
       data.push(row);
     });
     const cert = new Certificate();
-    const saveExcelFile = await cert.saveExcelFile(data);
-    let rsp: SuccessMessage = {
-      status: 200,
-      msg: "Certificate List",
-      data: saveExcelFile,
-    };
-    return rsp;
+    const saveExcelFile: any = await cert.saveExcelFile(data);
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(saveExcelFile);
+    XLSX.utils.book_append_sheet(wb, ws, "Certificates");
+    const wb_opts: WritingOptions = { bookType: "xlsx", type: "buffer" };
+    const streamFile = XLSX.write(wb, wb_opts);
+    const stream = bufferToStream(streamFile);
+    return stream;
   } catch (error) {
     throw error;
   }

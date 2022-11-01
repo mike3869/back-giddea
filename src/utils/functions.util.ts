@@ -1,5 +1,6 @@
-export const excelDateToJSDate = (serial: number) => {
-  return new Date((serial - (25567 + 1)) * 86400 * 1000);
+import { Readable } from "stream";
+export const excelDateToJSDate = (excelDate: number) => {
+  return new Date((excelDate - (25567 + 1)) * 86400 * 1000);
   //   let utc_days = Math.floor(serial - 25569);
   //   let utc_value = utc_days * 86400;
   //   let date_info = new Date(utc_value * 1000);
@@ -23,4 +24,13 @@ export const excelDateToJSDate = (serial: number) => {
   //     minutes,
   //     seconds
   //   );
+};
+export const bufferToStream = (buffer: any) => {
+  var stream = new Readable();
+  stream.push(buffer);
+  stream.push(null);
+  return stream;
+};
+export const removeRouteExtension = (fileName: string) => {
+  return fileName.split(".").shift();
 };
