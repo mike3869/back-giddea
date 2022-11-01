@@ -16,7 +16,6 @@ export const getPdfDocumentByUuid = async (_uuid: string) => {
     throw error;
   }
 };
-
 export const getListByQuery = async (_queryList: any) => {
   try {
     const queries: [string, string][] = Object.entries(_queryList);
@@ -65,7 +64,6 @@ export const getListByQuery = async (_queryList: any) => {
     throw error;
   }
 };
-
 export const saveTemplate = async (_template: any) => {
   try {
     const path: string = _template.tempFilePath;
@@ -122,6 +120,53 @@ export const saveTemplate = async (_template: any) => {
     const streamFile = XLSX.write(wb, wb_opts);
     const stream = bufferToStream(streamFile);
     return stream;
+  } catch (error) {
+    throw error;
+  }
+};
+export const saveCertificate = async (body: any) => {
+  try {
+    const certificate: ICertificate = {
+      ...body,
+      uuid: body.uuid ? String(body.uuid).trim() : uuidv4(),
+      student_name: String(body.student_name).trim(),
+      course_name: String(body.course_name).trim(),
+      person_document_code: body.person_document_code
+        ? String(body.person_document_code).trim()
+        : "",
+      course_list: body.course_list ? String(body.course_list).trim() : "",
+    };
+    const cert = new Certificate();
+    const save = await cert.saveCertificate(certificate);
+    let rsp: SuccessMessage = {
+      status: 200,
+      msg: "Certificate List",
+      data: save,
+    };
+    return rsp;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateCertificate = async (uuid: string, body: any) => {
+  try {
+    const certificate: ICertificate = {
+      ...body,
+      // student_name: String(body.student_name).trim(),
+      // course_name: String(body.course_name).trim(),
+      // person_document_code: body.person_document_code
+      //   ? String(body.person_document_code).trim()
+      //   : "",
+      // course_list: body.course_list ? String(body.course_list).trim() : "",
+    };
+    const cert = new Certificate(uuid);
+    const save = await cert.updateCertificate(certificate);
+    let rsp: SuccessMessage = {
+      status: 200,
+      msg: "Certificate List",
+      data: save,
+    };
+    return rsp;
   } catch (error) {
     throw error;
   }

@@ -47,10 +47,33 @@ export const queryBulkInsert = async (query: string, values: any[]) => {
     });
   });
 };
-
-export const querySelect = async (query: string, values: any[]) => {
+export const executeQuery = async (query: string, values: any[]) => {
   return new Promise((resolve, reject) => {
     pool.query(query, values, (err: any, result: any, fields) => {
+      if (err) {
+        return reject(new Error(err));
+      }
+      return resolve(JSON.parse(JSON.stringify(result)));
+    });
+  });
+};
+export const insertObj = async (query: string, obj: object) => {
+  return new Promise((resolve, reject) => {
+    pool.query(query, obj, (err: any, result: any, fields) => {
+      if (err) {
+        return reject(new Error(err));
+      }
+      return resolve(JSON.parse(JSON.stringify(result)));
+    });
+  });
+};
+export const updateObjById = async (
+  query: string,
+  obj: object,
+  id: string | number
+) => {
+  return new Promise((resolve, reject) => {
+    pool.query(query, [obj, id], (err: any, result: any, fields) => {
       if (err) {
         return reject(new Error(err));
       }

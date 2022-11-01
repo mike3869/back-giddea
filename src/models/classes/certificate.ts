@@ -4,12 +4,7 @@ import path from "path";
 import qrcode from "qrcode";
 import moment from "moment";
 
-import {
-  getByUuid,
-  getCertificateListPagination,
-  getCertificateListByFilters,
-  bulkInsertCertificates,
-} from "../../database/certificate";
+import * as certificateDB from "../../database/certificate";
 import { PATH_SLUG } from "../../configs/const/constants";
 import { ICertificate } from "../../models/interfaces/certificate";
 
@@ -147,7 +142,7 @@ class Certificate {
     try {
       const uuid = this._uuid;
       if (uuid) {
-        const document: any = await getByUuid(uuid);
+        const document: any = await certificateDB.getByUuid(uuid);
         return document[0];
       } else {
         throw new Error("The id is not recognized");
@@ -165,8 +160,14 @@ class Certificate {
       const page = _page < 0 ? 0 : _page;
       const size = _size < 0 ? 0 : _size;
       const init = (page - 1) * _size;
-      const list = await getCertificateListByFilters(init, size, _filters);
-      const pages: any = await getCertificateListPagination(_filters);
+      const list = await certificateDB.getCertificateListByFilters(
+        init,
+        size,
+        _filters
+      );
+      const pages: any = await certificateDB.getCertificateListPagination(
+        _filters
+      );
       return {
         list: list,
         pagination: {
@@ -185,7 +186,7 @@ class Certificate {
       try {
         const uuid = this._uuid;
         if (uuid) {
-          const document: any = await getByUuid(uuid);
+          const document: any = await certificateDB.getByUuid(uuid);
           const type = document[0].template.toLowerCase().replace(" ", "_");
           const pathFile = path.resolve(
             __dirname,
@@ -340,7 +341,7 @@ class Certificate {
           try {
             const temp: ICertificate[] = _rows.slice(i, i + numRows);
             errorsTemp = temp;
-            await bulkInsertCertificates(temp);
+            await certificateDB.bulkInsertCertificates(temp);
             const newData = errorsTemp.map((obj) => {
               return { ...obj, message: "created" };
             });
@@ -365,6 +366,30 @@ class Certificate {
         reject(error);
       }
     });
+  }
+  async saveCertificate(certificate: ICertificate) {
+    try {
+      const response = await certificateDB.saveCertificate(certificate);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async updateCertificate(certificate: ICertificate) {
+    try {
+      const uuid = this._uuid;
+      if (uuid) {
+        const response = await certificateDB.updateCertificate(
+          certificate,
+          uuid
+        );
+        return response;
+      } else {
+        throw new Error("The id is not recognized");
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
